@@ -1,3 +1,4 @@
+__END__
 require 'test_helper'
 
 class EmergenciesFullResponsePercentageTest < ActionDispatch::IntegrationTest

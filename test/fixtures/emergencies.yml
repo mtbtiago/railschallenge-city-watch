@@ -1,0 +1,18 @@
+# Read about fixtures at
+# http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  code: MyString
+  fire_severity: 1
+  police_severity: 1
+  medical_severity: 1
+  full_response: false
+  resolved_at: 2015-04-18 20:57:02
+
+two:
+  code: MyString
+  fire_severity: 1
+  police_severity: 1
+  medical_severity: 1
+  full_response: false
+  resolved_at: 2015-04-18 20:57:02

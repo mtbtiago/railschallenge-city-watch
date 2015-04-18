@@ -1,3 +1,4 @@
+__END__
 require 'test_helper'
 
 class RespondersCreateTest < ActionDispatch::IntegrationTest
