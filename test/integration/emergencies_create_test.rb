@@ -1,6 +1,7 @@
 require 'test_helper'
 
 class EmergenciesCreateTest < ActionDispatch::IntegrationTest
+  # pass
   test 'POST /emergencies/ simple creation' do
     post '/emergencies/', emergency: { code: 'E-99999999', fire_severity: 1, police_severity: 2, medical_severity: 3 }
     json_response = JSON.parse(response.body)
@@ -14,6 +15,7 @@ class EmergenciesCreateTest < ActionDispatch::IntegrationTest
   end
 
   test 'POST /emergencies/ all severities must be greater than or equal to zero' do
+  # pass
     post '/emergencies', emergency: { code: 'E-55555555', fire_severity: -1, police_severity: -1, medical_severity: -1 }
     assert_equal 422, response.status
     assert_equal(
@@ -29,6 +31,7 @@ class EmergenciesCreateTest < ActionDispatch::IntegrationTest
   end
 
   test 'POST /emergencies/ code attribute must be unique' do
+  # pass
     post '/emergencies', emergency: { code: 'E-not-unique', fire_severity: 1, police_severity: 3, medical_severity: 5 }
     json_response = JSON.parse(body)
 
@@ -67,6 +70,7 @@ class EmergenciesCreateTest < ActionDispatch::IntegrationTest
   end
 
   test 'POST /emergencies/ lack of fire_severity returns an error' do
+  # pass
     post '/emergencies', emergency: { code: 'E-55555555', police_severity: 2, medical_severity: 3 }
 
     assert_equal 422, response.status
@@ -74,6 +78,7 @@ class EmergenciesCreateTest < ActionDispatch::IntegrationTest
   end
 
   test 'POST /emergencies/ lack of police_severity returns an error' do
+  # pass
     post '/emergencies', emergency: { code: 'E-55555555', fire_severity: 2, medical_severity: 3 }
 
     assert_equal 422, response.status
@@ -81,6 +86,7 @@ class EmergenciesCreateTest < ActionDispatch::IntegrationTest
   end
 
   test 'POST /emergencies/ lack of medical_severity returns an error' do
+  # pass
     post '/emergencies', emergency: { code: 'E-55555555', fire_severity: 2, police_severity: 3 }
 
     assert_equal 422, response.status
@@ -88,6 +94,7 @@ class EmergenciesCreateTest < ActionDispatch::IntegrationTest
   end
 
   test 'POST /emergencies/ lack of multiple required fields returns an error' do
+  # pass
     post '/emergencies', emergency: { fire_severity: 1 }
 
     assert_equal 422, response.status

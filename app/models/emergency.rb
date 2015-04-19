@@ -1,6 +1,14 @@
 class Emergency < ActiveRecord::Base
   has_many :responders
-  validates :fire_severity, numericality: { only_integer: true, grather_than: 0 }
-  validates :police_severity, numericality: { only_integer: true, grather_than: 0 }
-  validates :medical_severity, numericality: { only_integer: true, grather_than: 0 }
+  
+  validates :code, presence: true
+
+  validates :fire_severity, presence: true 
+  validates :police_severity, presence: true 
+  validates :medical_severity, presence: true 
+
+  validates_numericality_of :fire_severity, greater_than_or_equal_to: 0
+  validates_numericality_of :police_severity, greater_than_or_equal_to: 0
+  validates_numericality_of :medical_severity, greater_than_or_equal_to: 0
+
 end
