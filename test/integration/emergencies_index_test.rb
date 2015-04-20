@@ -13,14 +13,14 @@ class EmergenciesIndexTest < ActionDispatch::IntegrationTest
 
     get '/emergencies/'
     assert_equal 200, response.status
-
     json_response = JSON.parse(body)
-    assert_equal(json_response['emergencies'][0]['code'], 'E-00000001')
-    assert_equal(json_response['emergencies'][0]['fire_severity'], 0)
-    assert_equal(json_response['emergencies'][0]['police_severity'], 1)
-    assert_equal(json_response['emergencies'][0]['medical_severity'], 2)
+    assert_equal('E-00000001',json_response['emergencies'][0]['code'])
+    assert_equal(0,json_response['emergencies'][0]['fire_severity'])
+    assert_equal(1,json_response['emergencies'][0]['police_severity'])
+    assert_equal(2,json_response['emergencies'][0]['medical_severity'])
   end
 
+# TODO: GET /emergencies/ includes the full_responses counts
 =begin
   test 'GET /emergencies/ includes the full_responses counts' do
     setup_resolved_emergencies
@@ -37,7 +37,6 @@ class EmergenciesIndexTest < ActionDispatch::IntegrationTest
     #
     # see `setup_resolved_emergencies`
   end
-=end
 
   def setup_resolved_emergencies
     post '/responders/', responder: { type: 'Fire', name: 'F-100', capacity: 1 }
@@ -51,4 +50,5 @@ class EmergenciesIndexTest < ActionDispatch::IntegrationTest
     patch '/emergencies/E-00000002', emergency: { resolved_at: Time.zone.now }
     patch '/emergencies/E-00000003', emergency: { resolved_at: Time.zone.now }
   end
+=end
 end
