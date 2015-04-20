@@ -22,6 +22,10 @@ class EmergenciesController < ApplicationController
     end
   end
 
+  def index
+    render json: build_emergencies_list(Emergency.all), status: 200
+  end
+
   def show
     emergency = Emergency.find_by(code: params[:id])
     if emergency.nil?
@@ -44,6 +48,21 @@ class EmergenciesController < ApplicationController
   end
 
   private
+
+  def build_emergencies_list(list)
+    result = {:emergencies => []}
+    i = 0
+    list.each do |emergency|
+      result[:emergencies][i] = Hash.new({
+        code: emergency.code,
+        fire_severity: emergency.fire_severity,
+        police_severity: emergency.police_severity,
+        medical_severity: emergency.medical_severity
+        })
+      i += 1
+    end
+    result
+  end
 
   def build_invalid_param(param)
     {:message => "found unpermitted parameter: #{param}"}

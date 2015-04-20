@@ -1,4 +1,3 @@
-__END__
 require 'test_helper'
 
 class EmergenciesIndexTest < ActionDispatch::IntegrationTest
@@ -22,6 +21,7 @@ class EmergenciesIndexTest < ActionDispatch::IntegrationTest
     assert_equal(json_response['emergencies'][0]['medical_severity'], 2)
   end
 
+=begin
   test 'GET /emergencies/ includes the full_responses counts' do
     setup_resolved_emergencies
 
@@ -37,6 +37,7 @@ class EmergenciesIndexTest < ActionDispatch::IntegrationTest
     #
     # see `setup_resolved_emergencies`
   end
+=end
 
   def setup_resolved_emergencies
     post '/responders/', responder: { type: 'Fire', name: 'F-100', capacity: 1 }
