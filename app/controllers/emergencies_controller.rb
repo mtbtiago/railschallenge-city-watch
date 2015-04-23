@@ -14,7 +14,7 @@ class EmergenciesController < ApplicationController
       begin
         emergency = Emergency.create(params.require(:emergency).permit(:code, :fire_severity, :police_severity, :medical_severity))
         if emergency.valid?
-          render json: build_emergence(emergency), status: :created
+          render json: build_emergency(emergency), status: :created
         else
           render json: build_error(emergency), status: :unprocessable_entity
         end
@@ -33,7 +33,7 @@ class EmergenciesController < ApplicationController
     if emergency.nil?
       head :not_found
     else
-      render json: build_emergence(emergency)
+      render json: build_emergency(emergency)
     end
   end
 
@@ -71,7 +71,7 @@ class EmergenciesController < ApplicationController
     {:message => emergency.errors.messages}
   end
 
-  def build_emergence(emergency)
+  def build_emergency(emergency)
     {emergency: emergency.as_json}
   end
 
