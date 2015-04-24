@@ -1,4 +1,3 @@
-__END__
 require 'test_helper'
 
 class RespondersIndexTest < ActionDispatch::IntegrationTest

@@ -78,11 +78,11 @@ def new
   private
 
   def build_responders_list(list)
-    result = {:responders => []}
+    result = []
     list.each do |responder|
-      result[:responders] << responder.as_json
+      result << build_responser(responder, with_prefix: false)
     end
-    result
+    {responders: result }
   end
 
   def build_invalid_param(param)
@@ -97,14 +97,19 @@ def new
     {:message => responder.errors.messages}
   end
 
-  def build_responser(responder)
-    {responder: {
+  def build_responser(responder, options = {with_prefix: true})
+    result = {
       emergency_code: responder.emergency_code,
       type: responder.type,
       name: responder.name,
       capacity: responder.capacity,
       on_duty: responder.on_duty
-      }}
+    }
+    if options[:with_prefix] == true
+      { responder: result }
+    else
+      result
+    end
   end
 
   def render_fail_response

@@ -13,7 +13,7 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'pry-rails'
   gem 'annotate', '~> 2.6.5'
-  gem "better_errors"
-  gem "binding_of_caller"  
-  gem "awesome_print", require:"ap"
+  gem 'better_errors'
+  gem 'binding_of_caller'
+  gem 'awesome_print', require: 'ap'
 end
