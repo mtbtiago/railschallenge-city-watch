@@ -44,7 +44,31 @@ def new
   end
 
   def update
-    render_fail_response
+    if params[:responder][:emergency_code]
+      render json: build_invalid_param(:emergency_code), status: :unprocessable_entity
+    elsif params[:responder][:type]
+      render json: build_invalid_param(:type), status: :unprocessable_entity
+    elsif params[:responder][:name]
+      render json: build_invalid_param(:name), status: :unprocessable_entity
+    elsif params[:responder][:capacity]
+      render json: build_invalid_param(:capacity), status: :unprocessable_entity
+    else
+      responder = Responder.find_by(name: params[:id])
+      if responder.nil?
+        head :not_found
+      else
+        begin
+          responder.update(params.require(:responder).permit(:type, :name, :capacity, :on_duty))
+          if responder.valid?
+            render json: build_responser(responder), status: :created
+          else
+            render json: build_error(responder), status: :unprocessable_entity
+          end
+        rescue ActiveRecord::RecordNotUnique
+          render json: build_key_violation, status: :unprocessable_entity
+        end
+      end
+    end
   end
 
   def destroy

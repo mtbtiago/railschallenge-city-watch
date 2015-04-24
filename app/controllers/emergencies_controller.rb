@@ -42,7 +42,25 @@ class EmergenciesController < ApplicationController
   end
 
   def update
-    render_fail_response
+    if params[:emergency][:code]
+      render json: build_invalid_param(:code), status: :unprocessable_entity
+    else
+      emergency = Emergency.find_by(code: params[:id])
+      if emergency.nil?
+        head :not_found
+      else
+        begin
+          emergency.update(params.require(:emergency).permit(:code, :fire_severity, :police_severity, :medical_severity, :resolved_at))
+          if emergency.valid?
+            render json: build_emergency(emergency), status: :created
+          else
+            render json: build_error(emergency), status: :unprocessable_entity
+          end
+        rescue ActiveRecord::RecordNotUnique
+          render json: build_key_violation, status: :unprocessable_entity
+        end
+      end
+    end
   end
 
   def destroy
