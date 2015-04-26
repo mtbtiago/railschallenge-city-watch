@@ -89,20 +89,17 @@ class RespondersController < ApplicationController
       # The total capacity of all responders in the city, by type
       result[v] << Responder.where(type: v).sum(:capacity)
       # The total capacity of all "available" responders (not currently assigned to an emergency)
-      result[v] << Responder.where(type: v, emergency_code: nil).sum(:capacity)
+      result[v] << Responder.emergency_free.where(type: v).sum(:capacity)
       # The total capacity of all "on-duty" responders, including those currently handling emergencies
       result[v] << Responder.on_duty.where(type: v).sum(:capacity)
       # The total capacity of all "available, AND on-duty" responders (the responders currently available to jump into a new emergency)
-      result[v] << Responder.on_duty.where(type: v, emergency_code: nil).sum(:capacity)
+      result[v] << Responder.on_duty.emergency_free.where(type: v).sum(:capacity)
     end
     {capacity: result}
   end
 
   def build_responders_list(list)
-    result = []
-    list.each do |responder|
-      result << build_responser(responder, with_prefix: false)
-    end
+    result = list.map {|responder|build_responser(responder, with_prefix: false)}
     {responders: result }
   end
 

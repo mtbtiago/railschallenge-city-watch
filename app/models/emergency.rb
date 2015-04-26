@@ -14,7 +14,7 @@
 #
 
 class Emergency < ActiveRecord::Base
-  has_many :responders
+  has_many :responders, :foreign_key => :emergency_code
   
   validates :code, presence: true
 
@@ -25,5 +25,7 @@ class Emergency < ActiveRecord::Base
   validates_numericality_of :fire_severity, greater_than_or_equal_to: 0
   validates_numericality_of :police_severity, greater_than_or_equal_to: 0
   validates_numericality_of :medical_severity, greater_than_or_equal_to: 0
+
+  scope :full_response, -> { where(full_response: true) }
 
 end

@@ -51,8 +51,13 @@ class EmergenciesController < ApplicationController
         head :not_found
       else
         begin
+          must_clear_responders = emergency.resolved_at.nil? && !params[:emergency][:resolved_at].nil?
+          # binding.pry
           emergency.update(params.require(:emergency).permit(:code, :fire_severity, :police_severity, :medical_severity, :resolved_at))
           if emergency.valid?
+            if must_clear_responders
+              clear_responders(emergency)
+            end
             render json: build_emergency(emergency), status: :created
           else
             render json: build_error(emergency), status: :unprocessable_entity
@@ -71,14 +76,66 @@ class EmergenciesController < ApplicationController
   private
 
   def update_responders(emergency)
-    
-  end  
+    severity = {}
+    EMERGENCY_TYPE.each do |k,v|
+      severity[k] = emergency.read_attribute(k.to_s+'_severity')
+      if severity[k] > 0
+        ideal_responder = search_ideal_responder(severity[k],v)
+        if ideal_responder
+          ideal_responder.assign_emergency(emergency)
+          severity[k] = 0
+        else
+          Responder.emergency_free.on_duty.where(type: v).order(:capacity).each do |responder|
+            if responder.capacity >= severity[k]
+              responder.assign_emergency(emergency)
+              severity[k] = 0
+              break
+            else
+              responder.assign_emergency(emergency)
+              severity[k] -= responder.capacity
+              if severity[k] <= 0
+                break
+              end
+            end
+          end
+        end
+      end # severity[k] > 0
+    end
+    is_full_response = true
+    severity.each do |k,v|
+      if severity[k] > 0
+        is_full_response = false
+        break
+      end
+    end
+    emergency.update_column('full_response',is_full_response)
+  end
+
+  def search_ideal_responder(capacity,type_name)
+    Responder.emergency_free.on_duty.where(type: type_name, capacity: capacity).first
+  end
+
+  def clear_responders(emergency)
+    emergency.responders.each do |responder|
+      responder.assign_emergency(nil)
+    end
+  end
+
+  def build_emergency(emergency, options = {with_prefix: true})
+    result = emergency.as_json
+    result[:responders] = emergency.responders.map {|responder| responder.name}
+    if options[:with_prefix] == true
+      {emergency: result}
+    else
+      result
+    end
+  end
 
   def build_emergencies_list(list)
-    result = {:emergencies => []}
-    list.each do |emergency|
-      result[:emergencies] << emergency.as_json
-    end
+    result = {emergencies: list.map { |emergency| build_emergency(emergency, with_prefix: false)}}
+    result[:full_responses] = [
+      Emergency.full_response.count,
+    Emergency.all.count]
     result
   end
 
@@ -92,10 +149,6 @@ class EmergenciesController < ApplicationController
 
   def build_error(emergency)
     {:message => emergency.errors.messages}
-  end
-
-  def build_emergency(emergency)
-    {emergency: emergency.as_json}
   end
 
   def render_fail_response

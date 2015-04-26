@@ -27,6 +27,16 @@ class Responder < ActiveRecord::Base
   scope :fire, -> { where(type: 'Fire') }
   scope :police, -> { where(type: 'Police') }
   scope :medical, -> { where(type: 'Medical') }
+
   scope :on_duty, -> { where(on_duty: true) }
+  scope :emergency_free, -> { where(emergency_code: nil) }
+
+  def assign_emergency(emergency)
+    if emergency.nil?
+      update_column('emergency_code', nil)
+    else
+      update_column('emergency_code', emergency.id)
+    end
+  end
 
 end

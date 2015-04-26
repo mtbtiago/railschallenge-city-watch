@@ -21,8 +21,6 @@ class EmergenciesIndexTest < ActionDispatch::IntegrationTest
     assert_equal(json_response['emergencies'][0]['medical_severity'], 2)
   end
 
-# TODO: GET /emergencies/ includes the full_responses counts
-=begin
   test 'GET /emergencies/ includes the full_responses counts' do
     setup_resolved_emergencies
 
@@ -51,5 +49,4 @@ class EmergenciesIndexTest < ActionDispatch::IntegrationTest
     patch '/emergencies/E-00000002', emergency: { resolved_at: Time.zone.now }
     patch '/emergencies/E-00000003', emergency: { resolved_at: Time.zone.now }
   end
-=end
 end
