@@ -84,38 +84,38 @@ class RespondersController < ApplicationController
 
   def build_capacity
     result = {}
-    EMERGENCY_TYPE.each do |k,v|
+    EMERGENCY_TYPE.each do |k, v|
       result[v] = []
-      # The total capacity of all responders in the city, by type
+      # capacity of all responders in the city, by type
       result[v] << Responder.where(type: v).sum(:capacity)
-      # The total capacity of all "available" responders (not currently assigned to an emergency)
+      # capacity of all "available" responders (not currently assigned to an emergency)
       result[v] << Responder.emergency_free.where(type: v).sum(:capacity)
-      # The total capacity of all "on-duty" responders, including those currently handling emergencies
+      # capacity of all "on-duty" responders, including those currently handling emergencies
       result[v] << Responder.on_duty.where(type: v).sum(:capacity)
-      # The total capacity of all "available, AND on-duty" responders (the responders currently available to jump into a new emergency)
+      # capacity of all "available, AND on-duty" responders (ones currently available to jump into a new emergency)
       result[v] << Responder.on_duty.emergency_free.where(type: v).sum(:capacity)
     end
-    {capacity: result}
+    { capacity: result }
   end
 
   def build_responders_list(list)
-    result = list.map {|responder|build_responser(responder, with_prefix: false)}
-    {responders: result }
+    result = list.map { |responder| build_responser(responder, with_prefix: false) }
+    { responders: result }
   end
 
   def build_invalid_param(param)
-    {:message => "found unpermitted parameter: #{param}"}
+    { message: "found unpermitted parameter: #{param}" }
   end
 
   def build_key_violation
-    {:message => {name: ['has already been taken']}}
+    { message: { name: ['has already been taken'] } }
   end
 
   def build_error(responder)
-    {:message => responder.errors.messages}
+    { message: responder.errors.messages }
   end
 
-  def build_responser(responder, options = {with_prefix: true})
+  def build_responser(responder, options = { with_prefix: true })
     result = {
       emergency_code: responder.emergency_code,
       type: responder.type,
@@ -133,6 +133,6 @@ class RespondersController < ApplicationController
   def render_fail_response
     result = {}
     result[:message] = 'page not found'
-    render json: result, :status => :not_found
+    render json: result, status: :not_found
   end
 end
