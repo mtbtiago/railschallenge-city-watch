@@ -85,7 +85,7 @@ class EmergenciesController < ApplicationController
           ideal_responder.assign_emergency(emergency)
           severity[k] = 0
         else
-          Responder.emergency_free.on_duty.where(type: v).order(:capacity).each do |responder|
+          Responder.emergency_free.on_duty.where(type: v).order(capacity: :desc).each do |responder|
             if responder.capacity >= severity[k]
               responder.assign_emergency(emergency)
               severity[k] = 0
