@@ -8,9 +8,9 @@ class EmergenciesShowTest < ActionDispatch::IntegrationTest
   end
 
   test 'GET /emergencies/:code simple get by code' do
-  # pass
     get '/emergencies/E-00000001'
     json_response = JSON.parse(body)
+
     assert_equal 'E-00000001', json_response['emergency']['code']
     assert_equal 1, json_response['emergency']['fire_severity']
     assert_equal 2, json_response['emergency']['police_severity']
