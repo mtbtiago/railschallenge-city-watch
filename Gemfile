@@ -10,4 +10,10 @@ group :development, :test do
   gem 'minitest-rails', '~> 2.1.1'
   gem 'database_cleaner', '1.4.1'
   gem 'web-console', '~> 2.0'
+  gem 'pry-byebug'
+  gem 'pry-rails'
+  gem 'annotate', '~> 2.6.5'
+  gem 'better_errors'
+  gem 'binding_of_caller'
+  gem 'awesome_print', require: 'ap'
 end
