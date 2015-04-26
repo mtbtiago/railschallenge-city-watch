@@ -14,6 +14,7 @@ class EmergenciesController < ApplicationController
       begin
         emergency = Emergency.create(params.require(:emergency).permit(:code, :fire_severity, :police_severity, :medical_severity))
         if emergency.valid?
+          update_responders(emergency)
           render json: build_emergency(emergency), status: :created
         else
           render json: build_error(emergency), status: :unprocessable_entity
@@ -68,6 +69,10 @@ class EmergenciesController < ApplicationController
   end
 
   private
+
+  def update_responders(emergency)
+    
+  end  
 
   def build_emergencies_list(list)
     result = {:emergencies => []}

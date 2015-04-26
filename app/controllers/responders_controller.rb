@@ -1,5 +1,6 @@
 class RespondersController < ApplicationController
-def new
+
+  def new
     render_fail_response
   end
 
@@ -27,7 +28,11 @@ def new
   end
 
   def index
-    render json: build_responders_list(Responder.all), status: :ok
+    if params[:show] == 'capacity'
+      render json: build_capacity
+    else
+      render json: build_responders_list(Responder.all), status: :ok
+    end
   end
 
   def show
@@ -76,6 +81,22 @@ def new
   end
 
   private
+
+  def build_capacity
+    result = {}
+    EMERGENCY_TYPE.each do |k,v|
+      result[v] = []
+      # The total capacity of all responders in the city, by type
+      result[v] << Responder.where(type: v).sum(:capacity)
+      # The total capacity of all "available" responders (not currently assigned to an emergency)
+      result[v] << Responder.where(type: v, emergency_code: nil).sum(:capacity)
+      # The total capacity of all "on-duty" responders, including those currently handling emergencies
+      result[v] << Responder.on_duty.where(type: v).sum(:capacity)
+      # The total capacity of all "available, AND on-duty" responders (the responders currently available to jump into a new emergency)
+      result[v] << Responder.on_duty.where(type: v, emergency_code: nil).sum(:capacity)
+    end
+    {capacity: result}
+  end
 
   def build_responders_list(list)
     result = []
