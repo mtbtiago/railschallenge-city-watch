@@ -1,4 +1,3 @@
-__END__
 require 'test_helper'
 
 class RespondersCapacityTest < ActionDispatch::IntegrationTest
