@@ -1,5 +1,4 @@
 class RespondersController < ApplicationController
-
   def new
     render_fail_response
   end
@@ -84,7 +83,7 @@ class RespondersController < ApplicationController
 
   def build_capacity
     result = {}
-    EMERGENCY_TYPE.each do |k, v|
+    EMERGENCY_TYPE.each do |_k, v|
       result[v] = []
       # capacity of all responders in the city, by type
       result[v] << Responder.where(type: v).sum(:capacity)

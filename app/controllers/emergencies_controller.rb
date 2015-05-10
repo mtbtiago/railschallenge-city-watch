@@ -55,7 +55,7 @@ class EmergenciesController < ApplicationController
         begin
           must_clear_responders = emergency.resolved_at.nil? && !params[:emergency][:resolved_at].nil?
           emergency.update(params.require(:emergency).permit(
-              :code, :fire_severity, :police_severity, :medical_severity, :resolved_at))
+                             :code, :fire_severity, :police_severity, :medical_severity, :resolved_at))
           if emergency.valid?
             clear_responders(emergency) if must_clear_responders
             render json: build_emergency(emergency), status: :created

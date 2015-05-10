@@ -18,8 +18,8 @@ class Responder < ActiveRecord::Base
   validates :name, presence: true
   validates :capacity, presence: true
   validates_numericality_of :capacity,
-    greater_than_or_equal_to: 1, less_than_or_equal_to: 5,
-    message: 'is not included in the list'
+                            greater_than_or_equal_to: 1, less_than_or_equal_to: 5,
+                            message: 'is not included in the list'
 
   self.inheritance_column = 'inheritance_col'
 
